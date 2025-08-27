@@ -14,6 +14,19 @@ app.use(express.urlencoded({ extended: true }));
 // Today's expenses
 
 // Search expenses
+app.get('/expenses/search/:userId', (req, res) => {
+    const { userId } = req.params;
+    const keyword = req.query.keyword || "";
+
+    const sql = "SELECT id, items, paid, date FROM expenses WHERE user_id = ? AND items LIKE ?";
+    con.query(sql, [userId, `%${keyword}%`], function(err, results) {
+        if (err) {
+            return res.status(500).send("Database server error");
+        }
+        return res.json(results);
+    });
+});
+
 
 // Add expense
 
