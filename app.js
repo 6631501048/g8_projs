@@ -99,7 +99,14 @@ app.get('/expenses/search/:userId', (req, res) => {
 
 
 // Add expense
-
+app.post('/expenses/add', (req, res) => {
+    const { items, paid, userId } = req.body;
+    const sql = "INSERT INTO expenses (items, paid, date, user_id) VALUES (?, ?, NOW(), ?)";
+    con.query(sql, [items, paid, userId], (err) => {
+        if (err) return res.status(500).send("Database server error");
+        return res.send("Expense added successfully");
+    });
+});
 // Delete an expense
 app.delete('/expenses/:userId/:expenseId', (req, res) => {
   const { userId, expenseId } = req.params;
